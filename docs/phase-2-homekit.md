@@ -1,15 +1,16 @@
-# Phase 2 native HomeKit integration
+# Phase 2: native HomeKit-Integration
 
-## Accessory model
+## Zubehörmodell
 
-One HomeKit accessory contains a native Television service with nine linked
-InputSource services and a linked TelevisionSpeaker for the iOS Remote's
-relative volume buttons. `Active` represents verified receiver power and
-`ActiveIdentifier` represents the verified input. The stable HomeKit input
-identifiers retain their BLE-value mapping (`identifier - 1`), while
-`DisplayOrder` presents the physical remote order: eARC, HDMI 1, HDMI 2,
-HDMI 3, Coax, Bluetooth, AUX, Optical, Port. This order follows Nubert's
-documented remote control grouping: HDMI, Coax, Bluetooth, AUX, Opto, Port.
+Ein HomeKit-Zubehör enthält einen nativen Television-Service mit neun
+verknüpften InputSource-Services sowie einen verknüpften TelevisionSpeaker für
+die relativen Lautstärketasten der iOS-Fernbedienung. `Active` steht für den
+bestätigten Receiver-Powerzustand und `ActiveIdentifier` für den bestätigten
+Eingang. Die stabilen HomeKit-Eingangskennungen behalten ihre BLE-Wertezuordnung
+(`identifier - 1`); `DisplayOrder` zeigt dagegen die Reihenfolge der
+physischen Fernbedienung: eARC, HDMI 1, HDMI 2, HDMI 3, Coax, Bluetooth, AUX,
+Optical, Port. Diese Ordnung folgt der von Nubert dokumentierten Gruppierung
+der Fernbedienung: HDMI, Coax, Bluetooth, AUX, Opto, Port.
 
 | Anzeige-Reihenfolge | HomeKit-Identifier | BLE-Eingangswert |
 |---|---:|---:|
@@ -23,47 +24,55 @@ documented remote control grouping: HDMI, Coax, Bluetooth, AUX, Opto, Port.
 | Optical | 8 | `07` |
 | Port | 9 | `08` |
 
-The Nubert remote order is documented in the [nuXinema preAV operating
-instructions](https://www.nubert.de/down/ab/e2/5a/1690272485/nuxinema-preav-bedienungsanleitung.pdf).
-The identifiers deliberately remain unchanged; each maps to its original BLE
-value through `identifier - 1`. AUX is hardware-verified. The remaining input
-writes retain their observed protocol mapping and require individual hardware
-validation before being described as hardware-verified.
+Die Reihenfolge der Nubert-Fernbedienung ist in der
+[nuXinema-preAV-Bedienungsanleitung](https://www.nubert.de/down/ab/e2/5a/1690272485/nuxinema-preav-bedienungsanleitung.pdf)
+dokumentiert. Die Kennungen bleiben bewusst unverändert; jede wird über
+`identifier - 1` auf ihren ursprünglichen BLE-Wert abgebildet. AUX ist auf
+Hardware geprüft. Die übrigen Eingabebefehle behalten ihre beobachtete
+Protokollzuordnung und benötigen eine individuelle Hardwarevalidierung, bevor
+sie als hardwaregeprüft bezeichnet werden.
 
-The TelevisionSpeaker service has no readable absolute-volume characteristic.
-The same accessory therefore adds a small compatible control:
+Der TelevisionSpeaker-Service besitzt keine lesbare Charakteristik für eine
+absolute Lautstärke. Dasselbe Zubehör ergänzt deshalb ein kleines kompatibles
+Steuerelement:
 
-- `Volume` is a Fan `RotationSpeed` control, mapped directly to the receiver's
-  raw `0x00`–`0x64` volume value (dB = raw - 100). Fan `Active` is ignored:
-  it neither changes receiver power nor sends a volume command.
+- `Volume` ist ein Fan-`RotationSpeed`-Steuerelement, das direkt auf den
+  Rohwert `0x00`–`0x64` des Receivers abgebildet wird (dB = Rohwert - 100).
+  Fan-`Active` wird ignoriert: Es ändert weder die Receiver-Power noch sendet
+  es einen Lautstärkebefehl.
 
-The former LightBulb service is replaced by a Fan service. Existing HomeKit
-pairing is preserved by firmware; after restart Apple Home should refresh the
-accessory database. If it retains the former light tile, remove and re-add
-homeBert in Apple Home. This is an Apple Home service-cache migration, not a
-firmware factory reset; Wi-Fi and receiver configuration remain untouched.
+Der frühere LightBulb-Service wurde durch einen Fan-Service ersetzt. Die
+Firmware bewahrt bestehende HomeKit-Paarungen; nach dem Neustart sollte Apple
+Home die Zubehördatenbank aktualisieren. Falls dort weiterhin die frühere
+Licht-Kachel erscheint, homeBert in Apple Home entfernen und erneut
+hinzufügen. Das ist eine Migration des Apple-Home-Service-Caches, kein
+Firmware-Werksreset; WLAN- und Receiver-Konfiguration bleiben erhalten.
 
-There is no separate surround control. An explicit HomeKit input change queues
-the matching surround write only after the receiver confirms that input: Auto
-(`05`) for eARC and HDMI 1–3, Stereo (`00`) for all other inputs. Remote and
-physical input/surround changes never trigger automatic surround writes.
+Es gibt kein separates Surround-Steuerelement. Eine ausdrückliche
+HomeKit-Eingangsänderung reiht den passenden Surround-Befehl erst ein, nachdem
+der Receiver diesen Eingang bestätigt hat: Auto (`05`) für eARC und HDMI 1–3,
+Stereo (`00`) für alle übrigen Eingänge. Fernbedienungs- und physische
+Eingangs-/Surround-Änderungen lösen nie automatische Surround-Befehle aus.
 
-## State and command handling
+## Zustands- und Befehlsverarbeitung
 
-The central state model records BLE connection state plus valid power, volume,
-input, and surround values. It is updated from standalone three-byte records
-and `86` bundled TLV responses. On every GATT connection, the firmware queues
-the main and sound-settings status requests after notification subscription.
+Das zentrale Zustandsmodell speichert den BLE-Verbindungszustand sowie gültige
+Power-, Lautstärke-, Eingangs- und Surround-Werte. Es wird aus einzelnen
+Drei-Byte-Datensätzen und gebündelten `86`-TLV-Antworten aktualisiert. Bei
+jeder GATT-Verbindung reiht die Firmware nach der Benachrichtigungsanmeldung
+die Haupt- und Sound-Einstellungsstatusabfragen ein.
 
-BLE notifications never call HomeSpan directly. They mark state dirty; the main
-loop publishes only confirmed, valid values to HomeKit. Disconnect clears all
-validity flags and sets power to UNKNOWN. Cached HomeKit values are not
-republished as verified state while disconnected.
+BLE-Benachrichtigungen rufen HomeSpan nie direkt auf. Sie markieren den Zustand
+als geändert; die Hauptschleife veröffentlicht nur bestätigte, gültige Werte an
+HomeKit. Eine Trennung löscht alle Gültigkeitsflags und setzt Power auf
+UNKNOWN. Zwischengespeicherte HomeKit-Werte werden während einer Trennung nicht
+als bestätigter Zustand erneut veröffentlicht.
 
-HomeKit callbacks only queue one BLE write; they never call `setVal()` while
-HomeSpan is processing that characteristic. The main loop sends the write and
-queues both status queries 500 ms later. A successful GATT write is not treated
-as confirmation. Für Lautstärke und Power gilt zusätzlich eine begrenzte,
+HomeKit-Callbacks reihen nur einen BLE-Write ein; sie rufen niemals `setVal()`
+auf, während HomeSpan diese Charakteristik verarbeitet. Die Hauptschleife
+sendet den Write und reiht beide Statusabfragen 500 ms später ein. Ein
+erfolgreicher GATT-Write gilt nicht als Bestätigung. Für Lautstärke und Power
+gilt zusätzlich eine begrenzte,
 flüchtige Pending-Reconciliation: Wird ein Befehl in die Queue aufgenommen,
 akzeptiert HomeSpan die Benutzeranfrage zunächst. Veraltete Rückmeldungen
 überschreiben den angeforderten Wert nicht; erst eine passende bestätigte
@@ -71,66 +80,74 @@ Empfänger-Rückmeldung, Fehler, Disconnect oder Timeout beendet den Pending-
 Zustand. Dadurch wird weder ein GATT-Write noch das Absenden selbst mit einer
 Gerätebestätigung verwechselt. Es gibt kein periodisches BLE-Polling.
 
-If Apple Home sends an input request during an accepted HomeKit Power-ON
-transition, homeBert holds that request for at most ten seconds. It sends the
-input only after the receiver confirms ON, then retains the existing confirmed-
-input-to-surround sequence. The deferred request is cancelled on timeout,
-disconnect, UNKNOWN state, or a HomeKit standby request; it is never replayed
-after a later unrelated wake-up.
+Sendet Apple Home während eines akzeptierten HomeKit-Einschaltvorgangs eine
+Eingangsanfrage, hält homeBert diese höchstens zehn Sekunden zurück. Es sendet
+den Eingang erst nach bestätigtem ON und behält danach die bestehende Sequenz
+aus bestätigtem Eingang und Surround-Befehl bei. Die zurückgestellte Anfrage
+wird bei Timeout, Trennung, UNKNOWN-Zustand oder einer HomeKit-Standby-Anfrage
+abgebrochen und nach einem späteren, unabhängigen Einschalten nie erneut
+gesendet.
 
-## BLE command evidence
+## Nachweise zu BLE-Befehlen
 
 | Function | Status | Write | Phase 2 use |
 |---|---|---|---|
-| Power ON | `1E 01 00` | confirmed `1F 01 00` | Enabled only from verified STANDBY |
-| Power OFF / STANDBY | `1E 01 01` | hardware-verified `1F 01 01` | Enabled only from verified ON |
-| Volume | `0A 01 value` | hardware-verified `0B 01 value` | Enabled from verified ON |
-| Input | `0E 01 value` | `0F 01 value` | Enabled; AUX (`04`) was independently tested |
-| Surround | `93 01 value` | `94 01 value` | Automatic Stereo (`00`) and Auto (`05`) after HomeKit input confirmation |
+| Power ON | `1E 01 00` | bestätigt `1F 01 00` | Nur aus bestätigt STANDBY aktiviert |
+| Power OFF / STANDBY | `1E 01 01` | hardwaregeprüft `1F 01 01` | Nur aus bestätigt ON aktiviert |
+| Lautstärke | `0A 01 value` | hardwaregeprüft `0B 01 value` | Aus bestätigt ON aktiviert |
+| Eingang | `0E 01 value` | `0F 01 value` | Aktiviert; AUX (`04`) wurde einzeln geprüft |
+| Surround | `93 01 value` | `94 01 value` | Automatisches Stereo (`00`) und Auto (`05`) nach HomeKit-Eingangsbestätigung |
 
-The main status query and the sound-settings query are confirmed captured
-read-only requests. `1F 01 01` was hardware-verified by write response,
-notification, and a subsequent status query. Volume writes and the automatic
-Stereo (`94 01 00`) and Auto (`94 01 05`) surround writes were subsequently
-verified on the target receiver. AUX input selection was independently tested;
-the remaining input values are observed status mappings using the same command
-format and remain candidates for per-input hardware validation.
+Die Hauptstatusabfrage und die Sound-Einstellungsabfrage sind bestätigte,
+aufgezeichnete reine Leseanfragen. `1F 01 01` wurde durch Write-Antwort,
+Benachrichtigung und anschließende Statusabfrage auf Hardware geprüft.
+Lautstärkebefehle sowie die automatischen Surround-Befehle Stereo
+(`94 01 00`) und Auto (`94 01 05`) wurden anschließend am Zielreceiver
+verifiziert. Die AUX-Eingangswahl wurde einzeln getestet; die übrigen
+Eingangswerte sind beobachtete Statuszuordnungen mit demselben Befehlsformat
+und bleiben Kandidaten für eine Hardwarevalidierung pro Eingang.
 
-## Safety policy
+## Sicherheitsregeln
 
-Input, volume, and surround writes require verified ON state. Power ON is the
-only exception and requires verified STANDBY; it is never inferred from BLE
-connection or write success. HomeKit Power OFF sends the verified `1F 01 01`
-only while ON and awaits a confirmed `1E 01 01` notification or refresh. A
-queued command prevents another command from being sent until it has been
-attempted and a targeted refresh has been queued.
+Eingangs-, Lautstärke- und Surround-Writes erfordern einen bestätigten
+ON-Zustand. Power ON ist die einzige Ausnahme und erfordert bestätigt STANDBY;
+es wird nie aus einer BLE-Verbindung oder einem erfolgreichen Write abgeleitet.
+HomeKit Power OFF sendet das geprüfte `1F 01 01` nur im ON-Zustand und wartet
+auf eine bestätigte `1E 01 01`-Benachrichtigung oder Aktualisierung. Ein
+eingereihter Befehl verhindert weitere Befehle, bis er versucht und eine
+gezielte Aktualisierung eingereiht wurde.
 
-## Hardware validation
+## Hardwarevalidierung
 
-1. Flash at 115200 baud using the existing Phase 1C procedure, then provision
-   Wi-Fi and select the receiver.
-2. Confirm HomeSpan starts and pair `homeBert` in Apple Home using the
-   deterministic eight-digit setup code or QR payload from serial output. Both
-   values derive from the ESP32 base MAC; see `docs/homekit-identity.md`.
-3. Confirm GATT subscription, both status-query write results, and power,
-   volume, input, and surround logs. Confirm their matching HomeKit controls
-   only after the relevant BLE notification arrives.
-4. Change power, volume, input, and surround from the Nubert remote and confirm
-   HomeKit updates without issuing a HomeKit command.
-5. From HomeKit, request Power ON and an input during the transition. Confirm
-   `HomeKit input deferred`, then an input write only after `1E 01 00`. Confirm
-   the mapped surround write follows the confirmed input.
-6. Verify the displayed order eARC, HDMI 1, HDMI 2, HDMI 3, Coax, Bluetooth,
-   AUX, Optical, Port. Verify AUX on hardware; the other input writes remain
-   protocol-derived candidates for individual hardware validation.
-7. Confirm Fan speed controls receiver volume and receiver volume changes
-   update Fan speed. Change Fan Active and confirm no BLE write or receiver
-   power change. Confirm Apple's "all lights off" action no longer includes
-   Volume.
-8. While STANDBY or UNKNOWN, attempt volume, input, and surround changes and
-   confirm `Nubert device command blocked` is logged with no GATT write.
+1. Mit 115200 Baud flashen, WLAN einrichten und den Receiver auswählen.
+2. Den HomeSpan-Start bestätigen und `homeBert` in Apple Home mit dem
+   deterministischen achtstelligen Einrichtungscode oder QR-Payload aus der
+   seriellen Ausgabe koppeln. Beide Werte werden aus der ESP32-Basis-MAC
+   abgeleitet; siehe [Deterministische HomeKit-Identität](homekit-identity.md).
+3. GATT-Anmeldung, beide Statusabfrage-Write-Ergebnisse sowie Power-,
+   Lautstärke-, Eingangs- und Surround-Logs prüfen. Die zugehörigen
+   HomeKit-Steuerelemente erst nach der jeweiligen BLE-Benachrichtigung
+   bestätigen.
+4. Power, Lautstärke, Eingang und Surround über die Nubert-Fernbedienung
+   ändern und prüfen, dass HomeKit ohne eigenen HomeKit-Befehl aktualisiert
+   wird.
+5. Aus HomeKit Power ON und während des Übergangs einen Eingang anfordern.
+   `HomeKit input deferred` prüfen, anschließend einen Eingangs-Write erst
+   nach `1E 01 00`. Der zugeordnete Surround-Write muss dem bestätigten Eingang
+   folgen.
+6. Die Anzeigeordnung eARC, HDMI 1, HDMI 2, HDMI 3, Coax, Bluetooth, AUX,
+   Optical, Port prüfen. AUX auf Hardware prüfen; die übrigen Eingangs-Writes
+   bleiben protokollabgeleitete Kandidaten für individuelle Hardwaretests.
+7. Prüfen, dass Fan Speed die Receiver-Lautstärke steuert und
+   Receiver-Lautstärkeänderungen Fan Speed aktualisieren. Fan Active ändern
+   und bestätigen, dass kein BLE-Write und keine Poweränderung entsteht.
+   Prüfen, dass Apples Aktion „Alle Lichter aus“ die Lautstärke nicht mehr
+   einschließt.
+8. Im STANDBY- oder UNKNOWN-Zustand Lautstärke-, Eingangs- und
+   Surround-Änderungen versuchen und prüfen, dass `Nubert device command
+   blocked` ohne GATT-Write protokolliert wird.
+9. In HomeKit das Television-Zubehör im ON-Zustand ausschalten. `Power
+   STANDBY write-with-response result=1`, `1E 01 01` sowie den ausgeschalteten
+   Television-Service prüfen.
 
-9. From HomeKit, switch the Television off while ON. Confirm `Power STANDBY
-   write-with-response result=1`, `1E 01 01`, and the Television becomes off.
-
-No hardware validation is implied by compilation.
+Eine Kompilierung impliziert keine Hardwarevalidierung.

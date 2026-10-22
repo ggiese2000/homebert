@@ -59,6 +59,10 @@ Die vollständige Anleitung einschließlich Wiederherstellung steht unter [Einri
 | `homebert-full.bin` | Erstinstallation mit Bootloader, Partitionstabelle und App | `0x0` |
 | `homebert-update.bin` | Nur Anwendung in `app0`; erhält NVS-Daten | `0x10000` |
 
+Für homeBert 0.4.0 stehen noch keine fertigen Firmware-Dateien zum Download
+bereit. Hintergrund und der geplante Umfang späterer Images stehen unter
+[Warum gibt es hier noch keine Firmware-Dateien?](build/release/WHY_NO_BINARIES_YET.md).
+
 ```bash
 # Erstinstallation – löscht den von diesem Image beschriebenen NVS-Bereich
 esptool --chip esp32 --port <PORT> --baud 115200 write-flash -z 0x0 homebert-full.bin
@@ -75,6 +79,12 @@ Das Update-Image setzt die gegenwärtige `app0`-Partition voraus. Die Firmware b
 
 Die Grafik zeigt Lage und Funktion der Bedienelemente. Für Farben, Blinkmuster
 und Zeitwerte ist die **aktuelle** Textreferenz maßgeblich:
+
+> **Hinweis zur Grafik:** Der Hinweis auf einen „konfigurierten normalen
+> LED-Modus“ bezieht sich ausschließlich auf Änderungen am Firmware-Quellcode
+> mit anschließendem Neubau. Die Einrichtung bietet keine Auswahl eines
+> LED-Modus. Für die tatsächlichen Farben, Blinkmuster und Zeitwerte ist
+> [LED und Taster](docs/LED_AND_BUTTON.md) maßgeblich.
 
 - Start: kurz weiß; beim anfänglichen BLE-Aufbau mindestens etwa zwei Sekunden blau blinkend.
 - Voll verbunden: fünf Sekunden grün, danach im stabilen Betrieb aus.

@@ -27,6 +27,8 @@ löscht Konfiguration.
 Die LED verwendet eine feste Priorität: WLAN-Warnungen und Setup haben Vorrang
 vor Start-, Verbindungs-, Status- und BLE-Befehlsanzeigen. Es gibt in der
 aktuellen Firmware keinen konfigurierbaren Dauer-/Aus-Modus.
+Eine abweichende LED-Logik ist nur durch Änderung und Neubau der Firmware
+möglich; die Einrichtung bietet dafür keine Benutzereinstellung.
 
 | Zustand | Anzeige |
 |---|---|

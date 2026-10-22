@@ -1,6 +1,11 @@
 .arduino/
 .tooling/
 build/
+!/build/
+/build/*
+!/build/release/
+/build/release/*
+!/build/release/WHY_NO_BINARIES_YET.md
 firmware/homebert_build_info.h
 *.bin
 *.elf
@@ -9,8 +14,11 @@ firmware/homebert_build_info.h
 *.csv.bak
 secrets.h
 *.log
+__pycache__/
+*.py[cod]
 .env
 .env.*
+.envrc
 *.local
 *.pem
 *.key

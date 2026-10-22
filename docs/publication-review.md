@@ -8,7 +8,7 @@ Compliance-Erklärung.
 
 | Vorhaben | Status | Begründung |
 |---|---|---|
-| Quellcode veröffentlichen | **READY WITH LIMITATIONS** | Der Staging-Baum hat eine frische, prüfbare Historie und verwendet synthetische Testwerte; finale Freigabe bleibt bewusst manuell. |
+| Quellcode veröffentlichen | **READY WITH LIMITATIONS** | Der Staging-Baum ist privacy-bereinigt; Herkunft und Veröffentlichungsberechtigung der bereitgestellten Hardware-Grafik sind dokumentiert. Die Binärweitergabe ist davon getrennt weiterhin nicht freigegeben. |
 | Firmware-Binärdateien veröffentlichen | **BLOCKED** | Komponenten- und Lizenzpflichten für das konkrete Image sind nicht vollständig geklärt. |
 | Private Entwicklung | **READY WITH LIMITATIONS** | Keine Veröffentlichung erfolgt; offene Punkte bleiben nachvollziehbar dokumentiert. |
 
@@ -32,9 +32,10 @@ werden nicht veröffentlicht.
 | Erledigt | Temporärer `@r`-Recovery-Test | Fest verdrahtete Gerätekennung in Entwicklungsinstrumentierung | Aus dem Staging-Baum samt Dokumentation und Test entfernt; normaler Reconnect und `@b`-Diagnose bleiben erhalten. |
 | Privat archiviert | Ursprüngliche Entwicklungshistorie | Historische Kopien und Diagnosekontext | Nicht Teil der frischen öffentlichen Staging-Historie. |
 
-Die Prüfung hat in getrackten Dateien keine bestätigten WLAN-Passwörter,
-privaten Schlüsselblöcke, API-Tokens oder eingecheckten Build-Images gefunden.
-Das ist keine Garantie für künftige Commits oder nicht erreichbare Git-Objekte.
+Die Prüfung hat in getrackten Dateien und der einzigen erreichbaren Historie
+keine bestätigten WLAN-Passwörter, privaten Schlüsselblöcke, API-Tokens oder
+eingecheckten Build-Images gefunden. Das ist keine Garantie für künftige
+Commits oder nicht erreichbare Git-Objekte.
 
 ### Archiv- und Veröffentlichungsgrenze
 
@@ -100,9 +101,9 @@ Dieser Weg benötigt zusätzlich ein geprüftes Release-Paket mit mindestens:
   GCC/Newlib-Anteile zum Image;
 - einer erneuten Privacy-/Security-Prüfung des finalen Pakets.
 
-**Empfehlung:** Zuerst den Privacy-Blocker lösen und anschließend nur den
-Quellcode veröffentlichen, sofern dessen separate Lizenzprüfung abgeschlossen
-ist. Firmware-Binärdateien erst nach Abschluss der vollständigen
+**Empfehlung:** Nur den Quellcode veröffentlichen; Herkunft und
+Veröffentlichungsberechtigung der Hardware-Grafik sind dokumentiert.
+Firmware-Binärdateien erst nach Abschluss der vollständigen
 Komponenten-/Notice- und LGPL-Prüfung als Release-Assets anbieten.
 
 ## Projektpositionierung
@@ -113,3 +114,16 @@ nicht Teil dieser Version. Das Projekt ist unabhängig entwickelt und weder von
 Nubert noch von Apple unterstützt oder freigegeben. Es wurde in einer eigenen
 Umgebung genutzt; daraus folgt keine allgemeine Stabilitäts-, Verfügbarkeits-
 oder Kompatibilitätszusage.
+
+## Herkunft der Bluetooth-Protokollinformationen
+
+Die für homeBert benötigten Bluetooth-Protokollinformationen wurden durch
+Beobachtung und Analyse des Kommunikationsverhaltens zwischen einem Nubert
+nuXinema Receiver und der zugehörigen Steuerungs-App auf eigener Hardware
+ermittelt. Dabei wurden weder Nubert-Firmware noch Anwendungs-Binärdateien
+dekompiliert. homeBert ist eine eigenständige Implementierung zur Herstellung
+der Interoperabilität und kein offizielles Produkt von Nubert.
+
+Diese Tatsachenbeschreibung ist keine rechtliche Bewertung und ersetzt keine
+Rechtsberatung. Im geprüften Quellbaum wurde kein kopierter Nubert-Quellcode
+oder sonstiges konkret identifiziertes fremdes Protokollmaterial festgestellt.
