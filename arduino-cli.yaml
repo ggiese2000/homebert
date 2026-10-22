@@ -1,0 +1,11 @@
+board_manager:
+  additional_urls:
+    - https://espressif.github.io/arduino-esp32/package_esp32_index.json
+build_cache:
+  path: .arduino/cache
+directories:
+  data: .arduino/data
+  downloads: .arduino/downloads
+  user: .arduino/user
+library:
+  enable_unsafe_install: false
