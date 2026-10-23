@@ -8,7 +8,7 @@ Compliance-Erklärung.
 
 | Vorhaben | Status | Begründung |
 |---|---|---|
-| Quellcode veröffentlichen | **READY WITH LIMITATIONS** | Der Staging-Baum ist privacy-bereinigt; Herkunft und Veröffentlichungsberechtigung der bereitgestellten Hardware-Grafik sind dokumentiert. Die Binärweitergabe ist davon getrennt weiterhin nicht freigegeben. |
+| Quellcode veröffentlichen | **FREIGEGEBEN** | Der Quellbaum ist privacy-bereinigt; Herkunft und Veröffentlichungsberechtigung der bereitgestellten Hardware-Grafik sind dokumentiert. Die Binärweitergabe ist davon getrennt weiterhin nicht freigegeben. |
 | Firmware-Binärdateien veröffentlichen | **BLOCKED** | Komponenten- und Lizenzpflichten für das konkrete Image sind nicht vollständig geklärt. |
 | Private Entwicklung | **READY WITH LIMITATIONS** | Keine Veröffentlichung erfolgt; offene Punkte bleiben nachvollziehbar dokumentiert. |
 
@@ -40,10 +40,11 @@ Commits oder nicht erreichbare Git-Objekte.
 ### Archiv- und Veröffentlichungsgrenze
 
 Der ursprüngliche Baum bleibt als private Sicherung mit vollständiger Historie
-erhalten. Der öffentliche Staging-Baum wird als neues, unabhängiges Repository
-mit frischer Historie initialisiert; er erhält weder alte Git-Objekte noch ein
-Remote. Erst nach einer ausdrücklichen Freigabe darf er einen öffentlichen
-Remote erhalten.
+erhalten. Der für eine öffentliche Veröffentlichung vorgesehene Quellbaum wurde
+als neues, unabhängiges Repository mit frischer Historie initialisiert. Zum
+Zeitpunkt dieser Staging-Prüfung enthielt er weder alte Git-Objekte noch einen
+Remote. Eine öffentliche Veröffentlichung bleibt davon getrennt und erfordert
+eine ausdrückliche Freigabe.
 
 ## Lizenzinventar und Nachweisstand
 

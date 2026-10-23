@@ -1,7 +1,7 @@
 # Warum gibt es hier noch keine Firmware-Dateien?
 
 homeBert 0.4.0 wurde erfolgreich kompiliert und technisch geprüft. Die
-Firmware kann bereits aus dem veröffentlichten Quellcode selbst erstellt
+Firmware kann bereits aus dem bereitgestellten Quellcode selbst erstellt
 werden.
 
 Fertige Firmware-Dateien zum direkten Flashen oder Aktualisieren stellen wir

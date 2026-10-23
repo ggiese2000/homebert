@@ -23,7 +23,7 @@ Verfügbarkeit und Kompatibilität werden nicht zugesichert.
 `homebert-full.bin` wird bei einer Erstinstallation an `0x0` geflasht.
 `homebert-update.bin` aktualisiert eine vorhandene `app0`-Installation an
 `0x10000` und erhält die NVS-Konfiguration. Genaue Befehle stehen in der
-[README](../README.md#firmware-installieren-und-aktualisieren).
+[README](../README.md#firmware-installieren).
 
 ## Bekannte Einschränkungen
 

@@ -8,7 +8,6 @@ VERSION_FILE="$ROOT/VERSION"
 BUILD_INFO="$BUILD_DIR/build-info.env"
 RELEASE_INFO="$RELEASE_DIR/BUILD_INFO"
 ARDUINO_DATA="$ROOT/.arduino/data/packages/esp32"
-ESPTOOL=$(find "$ARDUINO_DATA/tools/esptool_py" -type f -name esptool -perm -u+x -print -quit)
 BOOT_APP0="$ARDUINO_DATA/hardware/esp32/3.3.8/tools/partitions/boot_app0.bin"
 BOOTLOADER="$BUILD_DIR/firmware.ino.bootloader.bin"
 PARTITIONS="$BUILD_DIR/firmware.ino.partitions.bin"
@@ -34,12 +33,13 @@ if [[ -n $(git -C "$ROOT" status --porcelain --untracked-files=all) ]]; then
   exit 1
 fi
 
+"$ROOT/tools/build.sh"
+
+ESPTOOL=$(find "$ARDUINO_DATA/tools/esptool_py" -type f -name esptool -perm -u+x -print -quit)
 if [[ -z $ESPTOOL || ! -x $ESPTOOL ]]; then
-  echo "esptool was not installed by the project-local Arduino setup" >&2
+  echo "esptool was not installed by the project-local Arduino-ESP32 setup" >&2
   exit 1
 fi
-
-"$ROOT/tools/build.sh"
 
 if [[ ! -f $BUILD_INFO ]] || ! grep -Fxq "firmware_version=$VERSION" "$BUILD_INFO" ||
    ! grep -Fxq "git_commit=$(git -C "$ROOT" rev-parse HEAD)" "$BUILD_INFO"; then

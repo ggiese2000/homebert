@@ -1,127 +1,305 @@
 # homeBert
 
-**Lokale Apple-Home-Bridge für den Nubert nuXinema preAV – ohne Cloud, Homebridge, Home Assistant oder zusätzlichen Server.**
+### Dein Nubert nuXinema. Jetzt auch in Apple Home. ❤️
 
-homeBert läuft auf einem M5Stack ATOM Lite und verbindet einen nuXinema preAV über Bluetooth Low Energy (BLE) mit Apple Home. Der Receiver bleibt die maßgebliche Quelle für seinen Zustand: homeBert veröffentlicht Power, Eingang und Lautstärke erst anhand bestätigter BLE-Rückmeldungen.
+**Ein kleiner Helfer, der den nuXinema preAV endlich ins Smart Home bringt. Ganz ohne Cloud und auf Wunsch auch ohne Homebridge, Home Assistant oder zusätzlichen Server.**
 
-> **Status: 0.4.0 – erste öffentliche HomeKit-Edition (Release-Vorbereitung).** homeBert ist ein unabhängiges persönliches Community-Projekt. Es funktioniert in der Entwicklungsumgebung, garantiert jedoch weder Stabilität, Verfügbarkeit noch Kompatibilität mit anderer Hardware oder Konfiguration. Die Freigabe von Binärdateien setzt die noch offene Lizenzprüfung voraus.
+<p align="center">
+  <img src="docs/assets/homebert.png" alt="homeBert verbindet Apple Home mit dem Nubert nuXinema" width="720">
+</p>
 
-<p align="center"><img src="docs/assets/homebert.png" alt="homeBert verbindet Apple Home per WLAN und BLE mit einem nuXinema" width="720"></p>
+## Warum homeBert?
 
-## Was homeBert kann
+Ich liebe meinen **Nubert nuXinema preAV**.
 
-- Native Apple-Home-/HomeKit-Anbindung als Fernsehzubehör.
-- Ein- und Standby-Schalten, Lautstärke und Eingangswahl.
-- Automatische Surround-Wahl nach einer **von Apple Home ausgelösten und vom Receiver bestätigten** Eingangswahl: Auto für eARC/HDMI, Stereo für die übrigen Eingänge.
-- Bidirektionale Zustandsübernahme: Änderungen über Fernbedienung oder Gerät werden über BLE-Rückmeldungen in Apple Home sichtbar.
-- Lokale WLAN- und BLE-Einrichtung über einen temporären Setup-Hotspot; HomeKit-Pairing per gerätespezifischem Code oder QR-Code.
-- Serielle Diagnose und zwei OTA-fähige Anwendungs-Partitionen.
+Er klingt großartig, bietet jede Menge Möglichkeiten und ist das Herzstück meines Heimkinos. Als Nubert-Fan bin ich mit dem Gerät wirklich glücklich.
 
-Surround wird intern überwacht, ist jedoch kein separates HomeKit-Steuerelement. Ändernde Receiver-Befehle sind ausschließlich bei bestätigt eingeschaltetem Receiver erlaubt; homeBert weckt ihn nicht durch eine Lautstärke- oder Eingangsanfrage.
+Fast.
 
-## Unterstützte Hardware und Kompatibilität
+Denn ich bin auch begeisterter Smart-Home-Tüftler. Und genau da hört der Spaß leider auf.
 
-| Bereich | Stand |
-|---|---|
-| Bridge | **M5Stack ATOM Lite**, ESP32-PICO-D4, 4 MB Flash, kein PSRAM |
-| Receiver | **Nubert nuXinema preAV** – einzig praktisch getestetes Modell |
-| Netzwerk | 2,4-GHz-WLAN und BLE-Reichweite zum Receiver |
-| Apple Home | Native HomeKit-Kopplung, iPhone/iPad für Einrichtung |
+Der nuXinema lässt sich nicht ohne Weiteres in meine Hausautomation integrieren. Keine offen nutzbare Schnittstelle, keine direkte HomeKit-Anbindung, keine vernünftige Möglichkeit, ihn in Automationen einzubeziehen.
 
-Andere Nubert-Geräte können das in der Einrichtung verwendete Werbe-Service-UUID ausstrahlen. Das beweist weder das gleiche GATT-Protokoll noch eine Kompatibilität; sie werden daher nicht als unterstützt beworben.
+Und wenn er gerade nicht auf einen HDMI-Port eingestellt ist, funktioniert nicht einmal das automatische Ein- und Ausschalten über HDMI-CEC zuverlässig.
 
-Es gibt derzeit **eine** buildbare Firmwarekonfiguration. Eine separate
-„Advanced“-Edition ist noch nicht verfügbar. Eine Home-Assistant-Integration
-ist ebenfalls nicht Teil von 0.4.0 und wird gegebenenfalls getrennt betrachtet.
+Fazit: Ein fantastischer Receiver, der in meinem Smart Home ein ziemlich einsames Leben führt. 😢
 
-## Apple Home
+**Das musste doch besser gehen.**
 
-<p align="center"><img src="docs/assets/homekit-uebersicht.png" alt="homeBert in Apple Home" width="280"> <img src="docs/assets/homekit-steuerung.png" alt="HomeKit-Steuerung mit Eingängen und Lautstärke" width="280"></p>
+### One App to rule them all! 💍
 
-Power ON und Standby, Lautstärke sowie die BLE-Zustandssynchronisierung wurden am nuXinema preAV erprobt. AUX wurde als Eingang einzeln geprüft; die übrigen Eingangswerte folgen beobachteten Statuszuordnungen und verwenden dasselbe Befehlsformat. Details, Sicherheitsregeln und der Validierungsstand stehen in [HomeKit und BLE-Protokoll](docs/phase-2-homekit.md).
+Nubert hat für seine X-Produktfamilie eine ziemlich praktische Lösung: **X-Remote**.
 
-## Schnellstart
+Mit dieser kostenlosen App lassen sich zahlreiche Nubert-Geräte über Bluetooth Low Energy (BLE) steuern – darunter Lautsprecher der nuPro X- und XS-Serien, nuSub-Subwoofer, nuConnect-Verstärker, nuZeo-Lautsprecher und natürlich auch der **nuXinema preAV**.
 
-1. Die Firmware auf einen ATOM Lite flashen.
-2. Das temporäre WLAN **homeBert Setup** öffnen und `http://192.168.4.1/` aufrufen.
-3. Einen erkannten Nubert-Receiver auswählen. Die offizielle Nubert-App vorher vollständig schließen, damit sie keine BLE-Steuerverbindung hält.
-4. Ein 2,4-GHz-WLAN auswählen oder manuell eingeben und speichern.
-5. Nach dem Wechsel ins Heim-WLAN homeBert in Apple Home hinzufügen. Der Abschlussbildschirm und die serielle Konsole zeigen den aktuellen gerätespezifischen Setup-Code und QR-Code.
+Und X-Remote kann mehr, als nur Befehle senden: Die Kommunikation funktioniert bidirektional. Die App kann Einstellungen verändern und Informationen über den Zustand des verbundenen Geräts empfangen.
 
-Die vollständige Anleitung einschließlich Wiederherstellung steht unter [Einrichtung und Wiederherstellung](docs/setup-flow.md).
+Wenn die Nubert-App mit meinem nuXinema sprechen kann, warum sollte das nicht auch Apple Home können?
 
-## Firmware installieren und aktualisieren
+Nach eingehender Analyse der Bluetooth-Kommunikation zwischen X-Remote und dem nuXinema entstand **homeBert** – eine kleine Bridge, die den Receiver mit Apple Home verbindet.
 
-`./tools/release.sh` erzeugt lokal zwei Images unter `build/release/`:
+Keine Änderungen am Receiver. Keine Cloud. Keine zusätzliche Serverinstallation.
 
-| Datei | Zweck | Flash-Adresse |
-|---|---|---:|
-| `homebert-full.bin` | Erstinstallation mit Bootloader, Partitionstabelle und App | `0x0` |
-| `homebert-update.bin` | Nur Anwendung in `app0`; erhält NVS-Daten | `0x10000` |
+Nur ein winziger ESP32, der zwischen Bluetooth und Apple Home vermittelt.
 
-Für homeBert 0.4.0 stehen noch keine fertigen Firmware-Dateien zum Download
-bereit. Hintergrund und der geplante Umfang späterer Images stehen unter
-[Warum gibt es hier noch keine Firmware-Dateien?](build/release/WHY_NO_BINARIES_YET.md).
+Und plötzlich versteht sich mein Heimkino mit meinem Smart Home.
 
-```bash
-# Erstinstallation – löscht den von diesem Image beschriebenen NVS-Bereich
-esptool --chip esp32 --port <PORT> --baud 115200 write-flash -z 0x0 homebert-full.bin
+---
 
-# Bestehende app0-Installation aktualisieren – erhält WLAN, BLE-Auswahl und HomeKit-Daten
-esptool --chip esp32 --port <PORT> --baud 115200 write-flash -z 0x10000 homebert-update.bin
+## Was bringt mir homeBert?
+
+Mit homeBert erscheint dein nuXinema als Fernsehzubehör in Apple Home.
+
+Du kannst ihn über die Home-App bedienen und in deine Automationen einbinden.
+
+**Das funktioniert bereits:**
+
+- **Ein- und ausschalten:** Receiver einschalten oder in Standby versetzen.
+- **Eingänge wählen:** Zwischen den verfügbaren Quellen wechseln.
+- **Lautstärke regeln:** Direkt über Apple Home.
+- **Zustände synchronisieren:** Änderungen am Receiver oder über die Fernbedienung werden auch in Apple Home sichtbar.
+- **Surround automatisch wählen:** Bei einer über Apple Home ausgelösten Eingangswahl wird für HDMI/eARC automatisch der Auto-Modus und für andere Eingänge Stereo gewählt.
+
+Besonders wichtig war mir dabei, dass homeBert nicht einfach Befehle ins Blaue schickt.
+
+**homeBert kommuniziert bidirektional mit dem nuXinema:** Steuerbefehle werden über Bluetooth übertragen, während Statusmeldungen des Receivers an Apple Home zurückgemeldet werden. Dadurch bleiben beide Systeme auch dann synchron, wenn der nuXinema über seine Fernbedienung bedient wird.
+
+### So sieht das in Apple Home aus
+
+<p align="center">
+  <img src="docs/assets/homekit-uebersicht.png" alt="homeBert in Apple Home" width="280">
+  <img src="docs/assets/homekit-steuerung.png" alt="Steuerung des nuXinema in Apple Home" width="280">
+</p>
+
+*Hinweis: Die Surround-Umschaltung erfolgt automatisch im Hintergrund. Einen eigenen Surround-Schalter gibt es in Apple Home derzeit nicht.*
+
+---
+
+## Was du benötigst
+
+homeBert läuft auf einem **M5Stack ATOM Lite**.
+
+Er verbindet sich über Bluetooth Low Energy (BLE) mit dem nuXinema und über dein WLAN mit Apple Home.
+
+Die gesamte Kommunikation bleibt lokal.
+
+Du benötigst:
+
+- Einen **M5Stack ATOM Lite** (zzgl. USB-C-Stromversorgung)
+- Ein **2,4-GHz-WLAN**
+- Ein **iPhone oder iPad mit Apple Home**
+- Deinen **Nubert nuXinema preAV**
+
+**Weitere Nubert-Geräte:** Bislang wurde homeBert ausschließlich mit dem nuXinema preAV getestet. Da X-Remote auch andere Nubert-Geräte über Bluetooth steuert, ist eine Erweiterung von homeBert durchaus denkbar. Dafür müssen allerdings zunächst die jeweiligen Steuerbefehle und gegebenenfalls Unterschiede im Bluetooth-Protokoll untersucht werden.
+
+**Du möchtest homeBert mit einem anderen Nubert-Gerät verwenden?** Melde dich gerne – ich helfe bei der Untersuchung und möglichen Anpassung.
+
+---
+
+## Vor der Installation
+
+Bevor du homeBert einrichtest, solltest du einige Punkte kennen.
+
+**Bluetooth ist nicht unbegrenzt gesellig.**  
+Die offizielle Nubert-App und homeBert können nicht gleichzeitig dieselbe Steuerverbindung nutzen. Beende die Nubert-App daher vollständig, bevor du homeBert mit dem Receiver verbindest.
+
+**Die Kommunikation bleibt lokal.**  
+homeBert benötigt keine Cloud und keinen zusätzlichen Server. Die Verbindung zum Receiver erfolgt über Bluetooth, die Verbindung zu Apple Home über dein lokales WLAN.
+
+**homeBert ist kein offizielles Nubert- oder Apple-Produkt.**  
+Es handelt sich um ein unabhängiges Open-Source-Projekt ohne offiziellen Support durch Nubert oder Apple.
+
+---
+
+## Firmware installieren
+
+**homeBert 0.4.0 funktioniert. Die Firmware existiert und ist getestet.**
+
+Hier kommt leider der Teil, bei dem selbst die Vogonen anerkennend nicken würden.
+
+Fertige Firmware-Dateien stehen derzeit noch nicht zum Download bereit. Vor ihrer Veröffentlichung müssen die Lizenz- und Weitergabebedingungen einiger verwendeter Softwarekomponenten geprüft werden.
+
+Arduino-ESP32, ESP-IDF und ihre Abhängigkeiten bringen unterschiedliche Open-Source-Lizenzen mit. Diese Bedingungen müssen auch bei der Weitergabe fertig kompilierter Firmware korrekt berücksichtigt werden.
+
+Bis die zuständige Abteilung für intergalaktische Firmware-Freigaben ihre Stempel gesetzt hat, gibt es homeBert deshalb zunächst als Quellcode.
+
+Da ich fertige Firmware-Dateien aus Lizenzgründen derzeit noch nicht anbieten
+kann, kannst du homeBert selbst aus dem Quellcode erstellen.
+
+Dafür benötigst du einen Computer mit Arduino CLI und den passenden
+ESP32-Bibliotheken. Die Entwicklung und die bisherigen erfolgreichen Builds
+erfolgten mit Arduino CLI 1.3.1, Arduino-ESP32 3.3.8, HomeSpan 2.1.8 und
+NimBLE-Arduino 2.5.1.
+
+Lade den Quellcode herunter und folge der [Build-Anleitung](docs/build-from-source.md).
+Das vorhandene Build-Skript übernimmt die Kompilierung und Erstellung der
+Firmware-Dateien. Anschließend überträgst du die Firmware per USB auf deinen
+M5Stack ATOM Lite.
+
+**Was ist getestet?** homeBert 0.4.0 läuft auf meinem ATOM Lite. Die Firmware
+lässt sich mit der genannten Entwicklungsumgebung erfolgreich kompilieren. Der
+vollständige Installationsweg auf einem frisch eingerichteten Computer wurde
+noch nicht separat getestet.
+
+Wenn du beim Bauen oder Installieren Schwierigkeiten hast, melde dich gerne.
+
+Die Hintergründe findest du unter [Warum gibt es noch keine Firmware-Dateien?](build/release/WHY_NO_BINARIES_YET.md).
+
+Der Quellcode wird mit homeBert 0.4.0 öffentlich bereitgestellt. Fertige
+Firmware-Binärdateien bleiben bis zum Abschluss der Lizenzprüfung ausdrücklich
+ausgenommen.
+
+---
+
+## Einrichtung: in wenigen Schritten zum Smart Home
+
+Falls noch nicht geschehen, installiere zunächst die Firmware wie im vorherigen Abschnitt beschrieben.
+
+### 1. homeBert starten
+
+Verbinde den ATOM Lite mit der Stromversorgung.
+
+Nach dem Start versucht homeBert, eine Verbindung zum Receiver und zum konfigurierten WLAN herzustellen. Wenn noch keine WLAN-Konfiguration vorhanden ist, startet automatisch der Einrichtungsmodus.
+
+### 2. Mit dem Setup-WLAN verbinden
+
+homeBert öffnet ein eigenes WLAN namens **homeBert Setup**.
+
+Verbinde dich mit diesem Netzwerk und öffne anschließend die Einrichtungsseite unter:
+
+```text
+192.168.4.1
 ```
 
-Das Update-Image setzt die gegenwärtige `app0`-Partition voraus. Die Firmware besitzt zwei OTA-fähige App-Partitionen; ein separater, für Endnutzer dokumentierter Netzwerk-OTA-Ablauf gehört jedoch nicht zu diesem Release. Release-Erzeugung, Prüfsummen, Größenprüfung und Versionsprovenienz sind unter [Versionierung und lokale Releases](docs/versioning.md) beschrieben.
+### 3. Receiver auswählen
 
-## Taster und LED
+homeBert sucht nach erreichbaren Nubert-Geräten.
 
-<p align="center"><img src="docs/assets/homeBert-Schnellu%CC%88bersicht.png" alt="homeBert: Bedienelemente am M5Stack ATOM Lite" width="720"></p>
+Wähle deinen nuXinema aus der Liste aus.
 
-Die Grafik zeigt Lage und Funktion der Bedienelemente. Für Farben, Blinkmuster
-und Zeitwerte ist die **aktuelle** Textreferenz maßgeblich:
+Beende vorher die offizielle Nubert-App vollständig. Der Receiver erlaubt praktisch nur eine aktive Bluetooth-Steuerverbindung.
 
-> **Hinweis zur Grafik:** Der Hinweis auf einen „konfigurierten normalen
-> LED-Modus“ bezieht sich ausschließlich auf Änderungen am Firmware-Quellcode
-> mit anschließendem Neubau. Die Einrichtung bietet keine Auswahl eines
-> LED-Modus. Für die tatsächlichen Farben, Blinkmuster und Zeitwerte ist
-> [LED und Taster](docs/LED_AND_BUTTON.md) maßgeblich.
+### 4. Heim-WLAN einrichten
 
-- Start: kurz weiß; beim anfänglichen BLE-Aufbau mindestens etwa zwei Sekunden blau blinkend.
-- Voll verbunden: fünf Sekunden grün, danach im stabilen Betrieb aus.
-- Kurz Fronttaster drücken: Zustand fünf Sekunden anzeigen.
-- Doppelt drücken: BLE-Verbindung neu aufbauen.
-- Fronttaster zehn Sekunden halten: Werksreset. Der kleine seitliche Reset-Taster startet nur den ESP32 neu und löscht keine Konfiguration.
-- Setup: gelb blinkend; Warnzustände sind in der Detailreferenz beschrieben.
+Wähle dein 2,4-GHz-WLAN aus und gib das Passwort ein.
 
-Die vollständigen Prioritäten, Zeiten und Hinweise zum Werksreset stehen in [LED und Taster](docs/LED_AND_BUTTON.md). Der gelb blinkende Setup-Zustand ist auf Hardware beobachtet; die WLAN-Fehlerbilder sind bislang automatisiert, nicht abschließend physisch validiert.
+Anschließend beendet homeBert den Setup-Modus und verbindet sich mit deinem Heimnetzwerk.
 
-## Grenzen und Hinweise
+### 5. Zu Apple Home hinzufügen
 
-- Die Nubert-App und homeBert können praktisch um eine BLE-Steuerverbindung konkurrieren. Die App vor Einrichtung oder Fehlersuche vollständig schließen.
-- Apple Home kann Eingangsbezeichnungen und Darstellung zwischenspeichern; homeBert kann Apples Benutzeroberfläche nicht erzwingen.
-- BLE-Verbindungswiederherstellung nach einem Receiver-Stromausfall benötigt weiterhin Hardwarevalidierung der vorhandenen Diagnose-/Testpfade.
-- homeBert ist ein unabhängiges Community-Projekt. Nubert, nuXinema, Apple und HomeKit sind Marken ihrer jeweiligen Inhaber; daraus folgt keine Unterstützung oder Freigabe durch diese Unternehmen.
+Jetzt zeigt homeBert deinen gerätespezifischen HomeKit-Code beziehungsweise QR-Code an.
 
-## Dokumentation
+Damit kannst du den Receiver in Apple Home hinzufügen.
 
-| Thema | Maßgebliche Quelle |
+**Fertig!**
+
+Die ausführliche Anleitung, einschließlich Fehlerbehebung und Wiederherstellung, findest du unter [Einrichtung und Wiederherstellung](docs/setup-flow.md).
+
+---
+
+## Ein Knopf, eine LED – und ein bisschen Magie
+
+Der ATOM Lite hat eine mehrfarbige LED und einen großen Taster auf der Vorderseite.
+
+Damit lässt sich homeBert auch ohne Bildschirm bedienen.
+
+<p align="center">
+  <img src="docs/assets/homeBert-Schnellu%CC%88bersicht.png" alt="Taster und LED des M5Stack ATOM Lite" width="720">
+</p>
+
+**Die wichtigsten Funktionen:**
+
+| Aktion | Was passiert? |
 |---|---|
-| Einrichtung, Pairing und Wiederherstellung | [docs/setup-flow.md](docs/setup-flow.md) |
-| LED, Fronttaster und Hardware-Reset | [docs/LED_AND_BUTTON.md](docs/LED_AND_BUTTON.md) |
-| Serielle Konsole und BLE-Diagnose | [docs/SERIAL_CONSOLE.md](docs/SERIAL_CONSOLE.md) |
-| HomeKit-Modell, BLE-Protokoll und Sicherheitsregeln | [docs/phase-2-homekit.md](docs/phase-2-homekit.md) |
-| Architektur | [docs/architecture.md](docs/architecture.md) |
-| Versionierung und lokale Release-Erzeugung | [docs/versioning.md](docs/versioning.md) |
-| Entwurf der Release Notes 0.4.0 | [docs/release-notes-0.4.0.md](docs/release-notes-0.4.0.md) |
-| Release-Readiness | [docs/release-readiness.md](docs/release-readiness.md) |
-| Privacy- und Lizenzprüfung | [docs/publication-review.md](docs/publication-review.md) |
-| Lizenzrecherche für Binärweitergabe | [docs/licensing-and-redistribution.md](docs/licensing-and-redistribution.md) |
-| Drittanbieterhinweise | [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) |
+| Start | Kurze weiße Anzeige, anschließend Verbindungsaufbau |
+| Verbindung hergestellt | LED leuchtet etwa fünf Sekunden grün und geht dann aus |
+| Fronttaste kurz drücken | Aktuellen Status für fünf Sekunden anzeigen |
+| Fronttaste doppelt drücken | Bluetooth-Verbindung neu aufbauen |
+| Fronttaste zehn Sekunden halten | Werkseinstellungen wiederherstellen |
+| Kleine seitliche Taste | ESP32 neu starten, ohne die Konfiguration zu löschen |
 
-## Lizenz
+Die LED zeigt außerdem Verbindungsaufbau, Einrichtung und Fehlerzustände an.
 
-Der eigene homeBert-Quellcode steht unter der [MIT-Lizenz](LICENSE). Abhängigkeiten und Firmware-Binäranteile haben eigene Lizenzen. Vor einer öffentlichen Binärverteilung müssen die offenen Punkte der [Lizenzrecherche](docs/licensing-and-redistribution.md) erledigt sein.
+Wer andere Farben oder ein anderes LED-Verhalten möchte, kann das über den Firmware-Quellcode anpassen.
 
-Die redigierte Privacy- und Lizenzprüfung mit dem Unterschied zwischen
-Quellcode- und Binärverteilung steht unter
-[Publication Review](docs/publication-review.md).
+Alle Einzelheiten findest du unter [LED und Taster](docs/LED_AND_BUTTON.md).
+
+---
+
+## Bekannte Einschränkungen und wichtige Hinweise
+
+**Bluetooth-Verbindung mit der Nubert-App**
+
+Die offizielle Nubert-App und homeBert können nicht gleichzeitig dieselbe Bluetooth-Steuerverbindung verwenden. Wenn du die App nutzen möchtest, musst du die Verbindung von homeBert gegebenenfalls unterbrechen.
+
+**Apple Home kann Zustände zwischenspeichern**
+
+Darstellung und Bezeichnungen der Eingänge werden teilweise von Apple verwaltet und zwischengespeichert. Änderungen erscheinen deshalb nicht immer sofort in der Home-App.
+
+**Nicht alle Sonderfälle sind vollständig getestet**
+
+Insbesondere die automatische Wiederherstellung der Bluetooth-Verbindung nach einem vollständigen Stromverlust des Receivers benötigt weitere Praxistests.
+
+**Andere Nubert-Geräte sind nicht automatisch kompatibel**
+
+Bislang wurde homeBert ausschließlich mit dem nuXinema preAV getestet. Die Unterstützung anderer Geräte kann nicht vorausgesetzt werden.
+
+**Kein offizielles Produkt**
+
+homeBert ist ein unabhängiges Community-Projekt und wird weder von Nubert noch von Apple unterstützt oder herausgegeben.
+
+---
+
+## Was kommt als Nächstes?
+
+homeBert 0.4.0 ist der Anfang.
+
+Ich möchte das Projekt schrittweise weiterentwickeln.
+
+Auf meiner Wunschliste stehen unter anderem:
+
+- Eine **Advanced-Edition** mit zusätzlichen HomeKit-Bedienelementen.
+- Eine mögliche **Home-Assistant-Integration**.
+- Weitere Verbesserungen bei Diagnose, Bedienung und Zuverlässigkeit.
+- Fertige Firmware-Dateien, sobald die Lizenzprüfung abgeschlossen ist.
+
+Diese Funktionen sind noch nicht Bestandteil der aktuellen Version.
+
+---
+
+## Für alle, die es genauer wissen möchten
+
+Du möchtest wissen, wie homeBert intern funktioniert, wie die Bluetooth-Kommunikation aufgebaut ist oder welche Sicherheitsregeln implementiert sind?
+
+Hier findest du die technischen Details:
+
+| Thema | Dokumentation |
+|---|---|
+| Einrichtung und Wiederherstellung | [Setup-Anleitung](docs/setup-flow.md) |
+| LED und Taster | [Bedienung](docs/LED_AND_BUTTON.md) |
+| Bluetooth-Diagnose | [Serielle Konsole](docs/SERIAL_CONSOLE.md) |
+| HomeKit und Bluetooth | [HomeKit-/BLE-Architektur](docs/phase-2-homekit.md) |
+| Systemarchitektur | [Architektur](docs/architecture.md) |
+| Firmware-Build und Versionierung | [Versionierung](docs/versioning.md) |
+| Aktueller Entwicklungsstand | [Release Notes 0.4.0](docs/release-notes-0.4.0.md) |
+| Veröffentlichung und Datenschutz | [Publication Review](docs/publication-review.md) |
+| Lizenz- und Weitergabebedingungen | [Lizenzdokumentation](docs/licensing-and-redistribution.md) |
+| Drittanbieterhinweise | [Third-Party Notices](THIRD_PARTY_NOTICES.md) |
+
+---
+
+## Open Source und Lizenz
+
+Der von mir entwickelte homeBert-Quellcode steht unter der [MIT-Lizenz](LICENSE).
+
+Verwendete Bibliotheken und Frameworks unterliegen ihren jeweiligen Lizenzen. Die Bedingungen für die öffentliche Weitergabe fertig kompilierter Firmware werden noch geprüft.
+
+---
+
+### Viel Spaß mit homeBert!
+
+Vielleicht geht es dir wie mir: Du hast einen großartigen Receiver und möchtest ihn einfach ein bisschen besser in dein Zuhause integrieren.
+
+Genau dafür habe ich homeBert gebaut.
+
+**Für mehr Smart Home. Und noch mehr Freude am nuXinema.** ❤️

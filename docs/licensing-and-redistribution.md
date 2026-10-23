@@ -4,14 +4,14 @@
 
 Dieses Dokument hält den Stand der technischen Lizenzrecherche für homeBert fest. Es ist kein Rechtsgutachten und keine Erklärung, dass die Weitergabe der Firmware lizenzkonform ist.
 
-**Aktueller Status:** Der bereinigte Quellcode wird für eine spätere
-Veröffentlichung vorbereitet. `homebert-full.bin` und `homebert-update.bin`
-werden nicht veröffentlicht.
+**Aktueller Status:** Der bereinigte Quellcode ist für die öffentliche
+Quellcode-Veröffentlichung von homeBert 0.4.0 freigegeben.
+`homebert-full.bin` und `homebert-update.bin` werden nicht veröffentlicht.
 
 | Bereich | Bewertung |
 |---|---|
 | Private Entwicklung | **ASSESSMENT: CONTINUE** |
-| Öffentliche Quellcode-Veröffentlichung | **READY WITH LIMITATIONS:** Privacy- und Notice-Prüfung des frischen Staging-Baums erforderlich |
+| Öffentliche Quellcode-Veröffentlichung | **FREIGEGEBEN:** Privacy- und Notice-Prüfung des frischen Quellbaums ist dokumentiert |
 | Öffentliche Firmware-Binärdistribution | **INCOMPLETE / NO-GO** |
 
 Die vorherige Prüfung ergab unvollständige Drittanbieterhinweise, eine nicht vollständig belegte Zuordnung vorcompilierter Espressif-Archive sowie offene Fragen zu statischem Linken unter LGPL und zu GCC/Newlib-Laufzeitanteilen. Spätere Recherche reduziert die Unsicherheit für Wi-Fi, Bluetooth und PHY, ersetzt aber keine vollständige Paket- und Komponenten-Inventur.

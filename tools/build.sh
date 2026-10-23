@@ -7,6 +7,9 @@ VERSION_FILE="$ROOT/VERSION"
 BUILD_INFO="$ROOT/build/build-info.env"
 FQBN='esp32:esp32:esp32:PartitionScheme=min_spiffs'
 GENERATED_HEADER="$ROOT/firmware/homebert_build_info.h"
+EXPECTED_ARDUINO_CLI_VERSION='1.3.1'
+
+cd "$ROOT"
 
 if [[ ! -f $VERSION_FILE ]]; then
   echo "missing authoritative version file: $VERSION_FILE" >&2
@@ -36,6 +39,25 @@ elif [[ -x $ROOT/.tooling/arduino-cli/arduino-cli ]]; then
   CLI=$ROOT/.tooling/arduino-cli/arduino-cli
 else
   CLI=arduino-cli
+fi
+
+if [[ $CLI == */* ]]; then
+  if [[ ! -x $CLI ]]; then
+    echo "Arduino CLI is not executable: $CLI" >&2
+    echo "Install Arduino CLI $EXPECTED_ARDUINO_CLI_VERSION or set ARDUINO_CLI to its executable path." >&2
+    exit 1
+  fi
+elif ! command -v "$CLI" >/dev/null 2>&1; then
+  echo "Arduino CLI was not found: $CLI" >&2
+  echo "Install Arduino CLI $EXPECTED_ARDUINO_CLI_VERSION or set ARDUINO_CLI to its executable path." >&2
+  exit 1
+fi
+
+CLI_VERSION=$("$CLI" version | sed -n 's/.*Version: \([^ ]*\).*/\1/p' | head -n1)
+if [[ $CLI_VERSION != "$EXPECTED_ARDUINO_CLI_VERSION" ]]; then
+  echo "Arduino CLI $EXPECTED_ARDUINO_CLI_VERSION is required; found ${CLI_VERSION:-unknown}." >&2
+  echo "Use the documented pinned CLI or set ARDUINO_CLI to it explicitly." >&2
+  exit 1
 fi
 
 # Arduino CLI uses its own proxy setting for package downloads.  In a managed

@@ -2,9 +2,9 @@
 
 ## Einordnung
 
-**Vorgeschlagene Version:** `0.4.0` (erste öffentliche HomeKit-Edition)
+**Version:** `0.4.0` (erste öffentliche HomeKit-Edition)
 **Öffentlicher Quellstand:** frisches Repository mit einem unabhängigen
-Initial-Commit für `0.4.0`.
+Initial-Commit für `0.4.0`; für die Quellcode-Veröffentlichung freigegeben.
 
 `0.4.0` ist ein angemessener Minor-Schritt innerhalb von SemVer vor 1.0: Es
 fasst die erste öffentliche HomeKit-Edition zusammen. Ein Major-Sprung auf
@@ -98,12 +98,13 @@ Quell- oder Protokollmaterial festgestellt.
       sie sind keine zusätzliche Release-Sperre.
 - [ ] Finalen Kandidaten bauen, Prüfsummen erfassen und Privacy-/Link-Check
       wiederholen.
-- [ ] Erst danach bewusst Version taggen, Assets veröffentlichen oder pushen.
+- [ ] Erst danach bewusst einen öffentlichen Tag, Assets oder einen öffentlichen
+      Push freigeben.
 
 ## Gesamturteil
 
-**Öffentliche Quellverteilung: GO.** Die LED-Formulierung in der Grafik ist
-dabei nur redaktionell; Herkunft und Veröffentlichungsberechtigung der Grafik
-sind dokumentiert.
+**Öffentliche Quellverteilung: FREIGEGEBEN.** Die LED-Formulierung in der
+Grafik ist dabei nur redaktionell; Herkunft und
+Veröffentlichungsberechtigung der Grafik sind dokumentiert.
 **Binärverteilung: BLOCKED**, bis die separate Komponenten- und LGPL-Prüfung
 abgeschlossen ist. **Funktionaler Firmwarestand: READY WITH LIMITATIONS.**

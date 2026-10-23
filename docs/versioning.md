@@ -2,9 +2,10 @@
 
 Die einzige editierbare Firmware-Version steht in der Datei
 [`VERSION`](../VERSION) im Repository-Wurzelverzeichnis und folgt Semantic
-Versioning. Der aktuelle Stand `0.4.0` ist ein **unveröffentlichter
-Release-Kandidat**. Er darf erst nach Hardware-, Privacy- und Lizenzfreigabe
-getaggt oder veröffentlicht werden; der Status steht zusätzlich in
+Versioning. Der aktuelle Stand `0.4.0` ist eine funktionale und getestete
+Entwicklungsversion und für die öffentliche Quellcode-Veröffentlichung
+freigegeben. Kompilierte Firmware-Binärdateien bleiben bis zum Abschluss der
+separaten Lizenzprüfung gesperrt. Der Status steht zusätzlich in
 [Release-Readiness](release-readiness.md).
 
 `./tools/build.sh` prüft das Versionsformat, kompiliert die Version zusammen

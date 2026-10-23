@@ -13,5 +13,5 @@
 GPIO39 ist nur ein Eingang; die Firmware verwendet deshalb `INPUT` ohne
 internen Pull-up. Die verbindliche Bedien- und LED-Referenz steht unter
 [LED und Taster](LED_AND_BUTTON.md). Die Grafik in der
-[README](../README.md#taster-und-led) hilft bei der physischen Zuordnung,
+[README](../README.md) hilft bei der physischen Zuordnung,
 ersetzt aber nicht die aktuelle LED-Zustandstabelle.
